@@ -1,9 +1,9 @@
-import zipfile
 import pandas as pd
 from modeling import modeling
 from feature_engineering import feature_engineering
 from preprocess import preprocess
 from send_to_kaggle import send_to_kaggle
+from load_data import load_data
 
 
 def main():
@@ -22,15 +22,16 @@ def main():
     train_data_selected = feature_engineering(train_data_selected)
 
     # Обучение модели на подготовленном датасете
-    automl, oof_pred = modeling(train_data_selected)
+    automl, oof_pred, automl_utilized, oof_pred_utilized = modeling(train_data_selected)
 
     # Отправка результатов в файл submission
     test_data_selected = test_data.copy()
     test_data_selected = preprocess(test_data_selected)
     test_data_selected = feature_engineering(test_data_selected)
 
-    send_to_kaggle(automl, test_data_selected, test_data)
+    send_to_kaggle(automl, test_data_selected, test_data, 'submission.csv')
+
+    send_to_kaggle(automl_utilized, test_data_selected, test_data, 'submission_utilized.csv')
 
 
-def __init__():
-    main()
+main()
